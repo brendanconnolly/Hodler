@@ -1,4 +1,4 @@
-function DepositFundsCommand(authenticatedClient, useSandBox = true, currencyCode = `USD`) {
+function DepositFundsCommand(authenticatedClient, currencyCode = `USD`) {
 
     this.authdClient = authenticatedClient;
     this.currencyCode = currencyCode;

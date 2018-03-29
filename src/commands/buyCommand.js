@@ -10,16 +10,25 @@ BuyCommand.prototype.getProductId = function (coinTicker) {
 
 BuyCommand.prototype.getCoinQuantity = function (fiatAmount, coinPrice) {
     let potentialAmt = +fiatAmount / +coinPrice;
-
+    return potentialAmt.toFixed(4);
 }
 
-BuyCommand.prototype.getCoinPrice = async function (coinTicker) {
+BuyCommand.prototype.getCoinPrice = async function (coinTicker, pointsBelowMarket) {
 
     let productName = this.getProductId(coinTicker);
     return new Promise((resolve, reject) => {
-        this.publicClient.getProductHistoricRates(productName).then(data => {
+        this.publicClient.getProduct24HrStats(productName).then(data => {
             console.log(data);
-            resolve(data)
+
+            let currentPrice = +data.last;
+            let percentOfCurrent = (100 - pointsBelowMarket) / 100;
+            let desiredPrice = +currentPrice * +percentOfCurrent;
+
+            desiredPrice = desiredPrice.toFixed(2);
+
+            console.log(`${productName} desired price ${desiredPrice}`);
+
+            resolve(desiredPrice)
         })
             .catch(err => {
                 console.log(err);
@@ -28,25 +37,25 @@ BuyCommand.prototype.getCoinPrice = async function (coinTicker) {
     });
 };
 
-BuyCommand.prototype.execute = async function execute(coinTicker, fiatAmount) {
+BuyCommand.prototype.execute = async function execute(coinTicker, fiatAmount, atPercentBelowMarket) {
 
-    let coinPrice = await this.getCoinPrice();
+    let coinPrice = await this.getCoinPrice(coinTicker, atPercentBelowMarket);
     let coinQty = this.getCoinQuantity(fiatAmount, coinPrice);
     let productName = this.getProductId(coinTicker);
     let buyRequestData = {
         'type': `limit`,
         'price': coinPrice,
         'size': coinQty,
-        'product': productName,
+        'product_id': productName,
         'time_in_force': `GTC`
 
 
     }
+    console.log(buyRequestData);
     await this.authdClient.buy(buyRequestData).then(data => {
         console.log(data);
-        resolve(data)
     })
-        .catch(err => reject(err));
+        .catch(err => console.log(err));
 
 };
 
