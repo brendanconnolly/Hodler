@@ -6,8 +6,8 @@
   "scripts": {
     "lambda-setup": "./node_modules/.bin/node-lambda setup",
     "lambda-test": "./node_modules/.bin/node-lambda run",
-    "lambda-package": "./node_modules/.bin/node-lambda package",
-    "lambda-deploy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env"
+    "lambda-package": "./node_modules/.bin/node-lambda package --handler lambdafun.DepositCommand --environment production --functionName Deposit",
+    "lambda-deploy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env --handler lambdafun.DepositCommand --environment production --functionName Deposit --publish true"
   },
   "repository": {
     "type": "git",

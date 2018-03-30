@@ -1,10 +1,12 @@
-function DepositFundsCommand(authenticatedClient, currencyCode = `USD`) {
+function DepositFundsCommand (authenticatedClient, amount, walletName = `USD Wallet`, currencyCode = `USD`) {
 
     this.authdClient = authenticatedClient;
     this.currencyCode = currencyCode;
+    this.amount = amount;
+    this.walletName = walletName;
 };
 
-DepositFundsCommand.prototype.getWalletData = async function getWalletData(name) {
+DepositFundsCommand.prototype.getWalletData = async function getWalletData (name) {
     return new Promise((resolve, reject) => {
 
         this.authdClient.getCoinbaseAccounts().then(data => {
@@ -17,7 +19,7 @@ DepositFundsCommand.prototype.getWalletData = async function getWalletData(name)
     });
 };
 
-DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAccount(paymentMethodId, amount, currency = this.currencyCode) {
+DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAccount (paymentMethodId, amount, currency = this.currencyCode) {
 
     return new Promise((resolve, reject) => {
         this.authdClient.deposit({ 'amount': amount, 'currency': currency, 'coinbase_account_id': paymentMethodId, })
@@ -29,10 +31,10 @@ DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAcc
     });
 };
 
-DepositFundsCommand.prototype.execute = async function (amount, walletName = `USD Wallet`) {
+DepositFundsCommand.prototype.execute = async function execute () {
 
-    let walletData = await this.getWalletData(walletName);
-    await this.depositIntoAccount(walletData.id, amount);
+    let walletData = await this.getWalletData(this.walletName);
+    await this.depositIntoAccount(walletData.id, this.amount, this.currencyCode);
 
 };
 

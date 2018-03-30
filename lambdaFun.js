@@ -7,7 +7,7 @@ const currencyCode = `USD`;
 
 const authdClient = gdax.authenticatedApi(sandBoxMode);
 
-exports.lambdaDepositHandler = (event, context) => {
+exports.DepositHandler = (event, context) => {
 
     let depositAmount = 100;
     let depositCommand = new DepositFundsCommand(authdClient);
