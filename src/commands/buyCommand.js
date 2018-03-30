@@ -37,7 +37,7 @@ BuyCommand.prototype.getCoinPrice = async function (coinTicker, pointsBelowMarke
     });
 };
 
-BuyCommand.prototype.execute = async function execute(coinTicker, fiatAmount, atPercentBelowMarket) {
+BuyCommand.prototype.execute = async function (coinTicker, fiatAmount, atPercentBelowMarket) {
 
     let coinPrice = await this.getCoinPrice(coinTicker, atPercentBelowMarket);
     let coinQty = this.getCoinQuantity(fiatAmount, coinPrice);

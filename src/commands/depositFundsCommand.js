@@ -27,7 +27,7 @@ DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAcc
     });
 };
 
-DepositFundsCommand.prototype.execute = async function execute(amount, walletName = `USD Wallet`) {
+DepositFundsCommand.prototype.execute = async function (amount, walletName = `USD Wallet`) {
 
     let walletData = await this.getWalletData(walletName);
     await this.depositIntoAccount(walletData.id, amount);
