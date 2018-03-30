@@ -1,4 +1,4 @@
-const ScheduleCommand = require(`./commands/scheduledCommand.js`);
+const ScheduleCommand = require(`./scheduledCommand.js`);
 
 function RunOnDaysOfMonthCommand(jobName, command, days, hourToFire = 3, minuteToFire = 0) {
     this.cmd = command;

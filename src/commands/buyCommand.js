@@ -1,7 +1,10 @@
+const GetWalletBalanceCommand = require(`./getWalletBalanceCommand.js`);
+
 function BuyCommand(authenticatedClient, publicClient, useSandBox = true, currencyCode = `USD`) {
     this.authdClient = authenticatedClient;
     this.publicClient = publicClient;
     this.currencyCode = currencyCode;
+
 };
 
 BuyCommand.prototype.getProductId = function (coinTicker) {
@@ -48,14 +51,22 @@ BuyCommand.prototype.execute = async function (coinTicker, fiatAmount, atPercent
         'size': coinQty,
         'product_id': productName,
         'time_in_force': `GTC`
-
-
     }
-    console.log(buyRequestData);
-    await this.authdClient.buy(buyRequestData).then(data => {
-        console.log(data);
-    })
-        .catch(err => console.log(err));
+
+    let getAccountBalanceCmd = new GetWalletBalanceCommand(this.authdClient, this.currencyCode);
+    let accountBalance = await getAccountBalanceCmd.execute();
+    if (accountBalance.available > fiatAmount) {
+        console.log(buyRequestData);
+
+        await this.authdClient.buy(buyRequestData).then(data => {
+            console.log(data);
+        })
+            .catch(err => console.log(err));
+    }
+    else {
+        console.log(`Insufficient funds for Buy. Have ${accountBalance.available} / Need ${fiatAmount}`);
+    }
+
 
 };
 

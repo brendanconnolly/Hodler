@@ -6,9 +6,11 @@ function DepositFundsCommand(authenticatedClient, currencyCode = `USD`) {
 
 DepositFundsCommand.prototype.getWalletData = async function getWalletData(name) {
     return new Promise((resolve, reject) => {
+
         this.authdClient.getCoinbaseAccounts().then(data => {
+            //console.log(data);
             let fiatWallet = data.find(x => x.name === name);
-            console.log(fiatWallet.id);
+            console.log(fiatWallet);
             resolve(fiatWallet);
         })
             .catch(err => reject(err));
