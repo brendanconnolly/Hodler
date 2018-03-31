@@ -10,7 +10,7 @@ const authdClient = gdax.authenticatedApi(sandBoxMode);
 exports.DepositHandler = (event, context, callback) => {
 
     let depositAmount = 100;
-    let depositCommand = new DepositFundsCommand(authdClient, amount);
+    let depositCommand = new DepositFundsCommand(authdClient, depositAmount);
     depositCommand.execute();
 
 };
