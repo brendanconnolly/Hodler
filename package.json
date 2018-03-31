@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lambda-transpile": "babel ./ --out-dir ./transpiled/ --preset=es2017  --ignore node_modules --copy-files",
     "lambda-setup": "./node_modules/.bin/node-lambda setup",
     "lambda-test": "./node_modules/.bin/node-lambda run",
-    "lambda-package": "./node_modules/.bin/node-lambda package --handler lambdafun.DepositCommand --environment production --functionName Deposit",
-    "lambda-deploy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env --handler lambdafun.DepositCommand --environment production --functionName Deposit --publish true"
+    "lambda-package": "./node_modules/.bin/node-lambda package --prebuiltDirectory ./transpiled",
+    "lambda-deploy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env --prebuiltDirectory ./transpiled"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
     "node-schedule": "^1.3.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
     "node-lambda": "^0.11.6"
   }
 }

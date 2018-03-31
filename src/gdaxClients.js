@@ -4,9 +4,9 @@ const gdaxApiUrl = (sandBoxMode) => sandBoxMode ? 'https://api-public.sandbox.gd
 
 
 //yeah these need to go
-const apiKey = ``;
-const apiSecret = ``;
-const apiPassphrase = `xxx`;
+const apiKey = process.env.GDAX_API_KEY;
+const apiSecret = process.env.GDAX_API_SECRET;
+const apiPassphrase = process.env.GDAX_API_PASSPHRASE;
 
 const publicApi = (sandBoxMode = true) => {
     let uri = gdaxApiUrl(sandBoxMode);
