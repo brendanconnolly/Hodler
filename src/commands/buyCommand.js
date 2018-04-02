@@ -1,9 +1,12 @@
 const GetWalletBalanceCommand = require(`./getWalletBalanceCommand.js`);
 
-function BuyCommand(authenticatedClient, publicClient, useSandBox = true, currencyCode = `USD`) {
+function BuyCommand(authenticatedClient, publicClient, coinTicker, fiatAmount, atPercentBelowMarket, currencyCode = `USD`) {
     this.authdClient = authenticatedClient;
     this.publicClient = publicClient;
     this.currencyCode = currencyCode;
+    this.coinTicker = coinTicker;
+    this.fiatAmount = fiatAmount;
+    this.atPercentBelowMarket = atPercentBelowMarket;
 
 };
 
@@ -40,11 +43,11 @@ BuyCommand.prototype.getCoinPrice = async function (coinTicker, pointsBelowMarke
     });
 };
 
-BuyCommand.prototype.execute = async function (coinTicker, fiatAmount, atPercentBelowMarket) {
+BuyCommand.prototype.execute = async function () {
 
-    let coinPrice = await this.getCoinPrice(coinTicker, atPercentBelowMarket);
-    let coinQty = this.getCoinQuantity(fiatAmount, coinPrice);
-    let productName = this.getProductId(coinTicker);
+    let coinPrice = await this.getCoinPrice(this.coinTicker, this.atPercentBelowMarket);
+    let coinQty = this.getCoinQuantity(this.fiatAmount, coinPrice);
+    let productName = this.getProductId(this.coinTicker);
     let buyRequestData = {
         'type': `limit`,
         'price': coinPrice,
@@ -55,7 +58,8 @@ BuyCommand.prototype.execute = async function (coinTicker, fiatAmount, atPercent
 
     let getAccountBalanceCmd = new GetWalletBalanceCommand(this.authdClient, this.currencyCode);
     let accountBalance = await getAccountBalanceCmd.execute();
-    if (accountBalance.available > fiatAmount) {
+
+    if (accountBalance.available > this.fiatAmount) {
         console.log(buyRequestData);
 
         await this.authdClient.buy(buyRequestData).then(data => {
@@ -64,7 +68,7 @@ BuyCommand.prototype.execute = async function (coinTicker, fiatAmount, atPercent
             .catch(err => console.log(err));
     }
     else {
-        console.log(`Insufficient funds for Buy. Have ${accountBalance.available} / Need ${fiatAmount}`);
+        console.log(`Insufficient funds for Buy. Have ${accountBalance.available} / Need ${this.fiatAmount}`);
     }
 
 

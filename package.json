@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lambda-transpile": "babel ./ --out-dir ./transpiled/ --preset=es2017  --ignore node_modules --copy-files",
+    "run-bot": "node index.js",
+    "lambda-transpile": "babel ./ --out-dir ./transpiled/ --preset=es2017  --ignore node_modules --copy-files && cp -r ./node_modules ./transpiled/node_modules",
     "lambda-setup": "./node_modules/.bin/node-lambda setup",
     "lambda-test": "./node_modules/.bin/node-lambda run",
     "lambda-package": "./node_modules/.bin/node-lambda package --prebuiltDirectory ./transpiled",
-    "lambda-deploy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env --prebuiltDirectory ./transpiled"
+    "lambda-deploy-buy": "./node_modules/.bin/node-lambda deploy --configFile deploy.env -n Buys --handler lambdaHandlers.BuyHandler --prebuiltDirectory ./transpiled",
+    "lambda-deploy-deposit": "./node_modules/.bin/node-lambda deploy --configFile deploy.env -n Deposit --handler lambdaHandlers.DepositHandler --prebuiltDirectory ./transpiled"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/brendanconnolly/Hodler#readme",
   "dependencies": {
+    "dotenv": "^5.0.1",
     "gdax": "^0.6.0",
     "node-schedule": "^1.3.0"
   },

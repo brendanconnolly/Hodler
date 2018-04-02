@@ -1,13 +1,18 @@
 const ScheduleCommand = require(`./scheduledCommand.js`);
 
-function RunOnDaysOfMonthCommand(jobName, command, days, hourToFire = 3, minuteToFire = 0) {
-    this.cmd = command;
-    this.name = jobName;
+function RunOnDaysOfMonthCommand(commands, days, hourToFire = 3, minuteToFire = 0) {
+    this.cmds = commands;
     this.reoccurrenceRule = { date: [...days], minute: minuteToFire, hour: hourToFire };
     this.counter = 0;
 };
 
-RunOnDaysOfMonthCommand.prototype.execute = () => {
-    let schedule = new ScheduleCommand(this.name, this.cmd);
-    schedule.execute();
-}
+RunOnDaysOfMonthCommand.prototype.execute = async function () {
+
+    this.cmds.forEach((value, key) => {
+        let schedule = new ScheduleCommand(key, value);
+        schedule.execute();
+    });
+
+};
+
+module.exports = RunOnDaysOfMonthCommand;
