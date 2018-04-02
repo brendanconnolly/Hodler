@@ -7,10 +7,11 @@ function ScheduledCommand (jobName, command, reoccurrence) {
     this.counter = 0;
 };
 
-ScheduledCommand.prototype.execute = async function execute () {
+ScheduledCommand.prototype.execute = function () {
 
     console.log(`running ${this.name}`);
-    schedule.scheduleJob(this.name, this.reoccurrenceRule, this.cmd);
+    let job = schedule.scheduleJob(this.name, this.reoccurrenceRule, this.cmd);
+    //console.log(`Next on ${job.nextInvocation}`);
 };
 
 module.exports = ScheduledCommand;
