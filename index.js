@@ -1,4 +1,4 @@
-const env = require('dotenv').config()
+const env = require('dotenv').config();
 const gdax = require(`./src/gdaxClients.js`);
 
 const DepositFundsCommand = require(`./src/commands/depositFundsCommand.js`);
@@ -42,7 +42,7 @@ getDepositCommands = () => {
 
 };
 
-(async () => {
+(() => {
 
     let takeMyMoney = getDepositCommands();
     let gimmieCoins = getBuyCommands();
@@ -50,8 +50,8 @@ getDepositCommands = () => {
     let depositScheduler = new RunOnDaysOfMonthCommand(takeMyMoney, [1]);
     let buyScheduler = new RunOnDaysOfMonthCommand(gimmieCoins, [10, 20]);
 
-    await depositScheduler.execute();
-    await buyScheduler.execute();
+    depositScheduler.execute();
+    buyScheduler.execute();
 
 
 })();

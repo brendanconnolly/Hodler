@@ -24,6 +24,7 @@
   "homepage": "https://github.com/brendanconnolly/Hodler#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
+    "forever": "^0.15.3",
     "gdax": "^0.6.0",
     "node-schedule": "^1.3.0"
   },
