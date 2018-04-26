@@ -58,9 +58,10 @@ BuyCommand.prototype.execute = async function () {
 
     let getAccountBalanceCmd = new GetWalletBalanceCommand(this.authdClient, this.currencyCode);
     let accountBalance = await getAccountBalanceCmd.execute();
+    console.log(buyRequestData);
 
-    if (accountBalance.available > this.fiatAmount) {
-        console.log(buyRequestData);
+    if (+accountBalance.available > +this.fiatAmount) {
+
 
         await this.authdClient.buy(buyRequestData).then(data => {
             console.log(data);

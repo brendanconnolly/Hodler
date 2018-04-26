@@ -1,17 +1,17 @@
-function DepositFundsCommand (authenticatedClient, amount, walletName = `USD Wallet`, currencyCode = `USD`) {
+function DepositFundsCommand(authenticatedClient, amount, accountType = `ach_bank_account`, currencyCode = `USD`) {
 
     this.authdClient = authenticatedClient;
     this.currencyCode = currencyCode;
     this.amount = amount;
-    this.walletName = walletName;
+    this.walletName = accountType;
 };
 
-DepositFundsCommand.prototype.getWalletData = async function getWalletData (name) {
+DepositFundsCommand.prototype.getWalletData = async function getWalletData(name) {
     return new Promise((resolve, reject) => {
 
-        this.authdClient.getCoinbaseAccounts().then(data => {
-            //console.log(data);
-            let fiatWallet = data.find(x => x.name === name);
+        this.authdClient.getPaymentMethods().then(data => {
+            console.log(data);
+            let fiatWallet = data.find(x => x.type === name);
             console.log(fiatWallet);
             resolve(fiatWallet);
         })
@@ -19,10 +19,10 @@ DepositFundsCommand.prototype.getWalletData = async function getWalletData (name
     });
 };
 
-DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAccount (paymentMethodId, amount, currency = this.currencyCode) {
+DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAccount(paymentMethodId, amount, currency = this.currencyCode) {
 
     return new Promise((resolve, reject) => {
-        this.authdClient.deposit({ 'amount': amount, 'currency': currency, 'coinbase_account_id': paymentMethodId, })
+        this.authdClient.depositPayment({ 'amount': amount, 'currency': currency, 'payment_method_id': paymentMethodId, })
             .then(data => {
                 console.log(data);
                 resolve(data)
@@ -31,7 +31,7 @@ DepositFundsCommand.prototype.depositIntoAccount = async function depositIntoAcc
     });
 };
 
-DepositFundsCommand.prototype.execute = async function execute () {
+DepositFundsCommand.prototype.execute = async function execute() {
 
     let walletData = await this.getWalletData(this.walletName);
     await this.depositIntoAccount(walletData.id, this.amount, this.currencyCode);

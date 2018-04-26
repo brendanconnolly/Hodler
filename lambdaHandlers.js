@@ -13,7 +13,7 @@ const percentBelowMarket = process.env.PERCENT_BELOW_MARKET;
 
 exports.DepositHandler = (event, context, callback) => {
 
-    let depositAmount = 100;
+    let depositAmount = process.env.DEPOSIT_AMOUNT;
     let depositCommand = new DepositFundsCommand(authdClient, depositAmount);
     depositCommand.execute();
 
