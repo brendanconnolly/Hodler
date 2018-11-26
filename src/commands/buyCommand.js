@@ -45,6 +45,10 @@ BuyCommand.prototype.getCoinPrice = async function (coinTicker, pointsBelowMarke
 
 BuyCommand.prototype.execute = async function () {
 
+    if (+this.fiatAmount <= 0) {
+        console.log(`Zero Amount - Skipping Buy`)
+        return;
+    }
     let coinPrice = await this.getCoinPrice(this.coinTicker, this.atPercentBelowMarket);
     let coinQty = this.getCoinQuantity(this.fiatAmount, coinPrice);
     let productName = this.getProductId(this.coinTicker);
